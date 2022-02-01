@@ -51,13 +51,22 @@ app.post("/api/notes", (req, res) => {
         id: uniqueId()
     };
 
-    const newNoteStr = JSON.stringify(newNote, null, 2);
 
-    fs.writeFile("./db/db.json", newNoteStr, (err) => {
+    // read from db.json, add new note data, then overwrite
+
+    fs.readFile("./db/db.json", "utf8", (err, data) => {
         if (err) {
-            console.error(err);
+            err ? console.error(err) : console.log("note successfully saved");
+        } else {
+            const parsedNotes = JSON.parse(data);
+            parsedNotes.push(newNote);
+            console.log(parsedNotes);
+
+            fs.writeFile("./db/db.json", JSON.stringify(parsedNotes, null, 2), (err) => {
+                err ? console.error(err) : console.log("Note saved");
+            })
         }
-    });
+    })
 
 });
 

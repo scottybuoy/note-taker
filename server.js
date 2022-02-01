@@ -21,11 +21,36 @@ app.get("/", (req, res) => res.send("Supppppp"));
 
 app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname, "public/notes.html"));
-})
+});
 
-app.post("/notes", (req, res) => {
+app.get("/api/notes", (req, res) => {
+    fs.readFile("./db/db.json", "utf8", (err, data) => {
+        if (err) {
+            console.error(err);
+        } else {
+            res.json(JSON.parse(data));
+        }
+    });
+});
 
-})
+app.post("/api/notes", (req, res) => {
+    console.log(`${req.method} request received`)
+    const { title, text } = req.body;
+
+    const newNote = {
+        title,
+        text
+    };
+
+    const newNoteStr = JSON.stringify(newNote);
+
+    fs.writeFile("./db/db.json", newNoteStr, (err) => {
+        if (err) {
+            console.error(err);
+        }
+    })
+
+});
 
 
 

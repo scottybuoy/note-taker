@@ -6,7 +6,7 @@ const uniqueId = require("./helpers/uniqueId.js");
 const { addNewNote } = require("./helpers/addNewNote.js");
 
 // create variable for port
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // create instance of express
 const app = express();
@@ -19,9 +19,9 @@ app.use(express.static("public"));
 
 
 
-// ---------- get requests ------------
+// ---------- get routes ------------
 
-app.get("/", (req, res) => res.send("Supppppp"));
+// app.get("/", (req, res) => res.send("Supppppp"));
 
 app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname, "public/notes.html"));
@@ -37,13 +37,15 @@ app.get("/api/notes", (req, res) => {
     });
 });
 
+app.get("*", (req, res) => res.sendFile(path.join(__dirname, "./public/index.html")));
 
 
 
 
+// -------- post route ------------
 
 app.post("/api/notes", (req, res) => {
-    console.log(`${req.method} request received`)
+    
     const { title, text } = req.body;
 
     const newNote = {
@@ -54,21 +56,6 @@ app.post("/api/notes", (req, res) => {
 
 
     // read from db.json, add new note data, then overwrite
-
-    // fs.readFile("./db/db.json", "utf8", (err, data) => {
-    //     if (err) {
-    //         err ? console.error(err) : console.log("note successfully saved");
-    //     } else {
-    //         const parsedNotes = JSON.parse(data);
-    //         parsedNotes.push(newNote);
-    //         console.log(parsedNotes);
-
-    //         fs.writeFile("./db/db.json", JSON.stringify(parsedNotes, null, 2), (err) => {
-    //             err ? console.error(err) : console.log("Note saved");
-    //         })
-    //     }
-    // })
-
 
     addNewNote(newNote, "./db/db.json");
 

@@ -3,6 +3,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const uniqueId = require("./helpers/uniqueId.js");
+const { addNewNote } = require("./helpers/addNewNote.js");
 
 // create variable for port
 const PORT = 3001;
@@ -54,19 +55,22 @@ app.post("/api/notes", (req, res) => {
 
     // read from db.json, add new note data, then overwrite
 
-    fs.readFile("./db/db.json", "utf8", (err, data) => {
-        if (err) {
-            err ? console.error(err) : console.log("note successfully saved");
-        } else {
-            const parsedNotes = JSON.parse(data);
-            parsedNotes.push(newNote);
-            console.log(parsedNotes);
+    // fs.readFile("./db/db.json", "utf8", (err, data) => {
+    //     if (err) {
+    //         err ? console.error(err) : console.log("note successfully saved");
+    //     } else {
+    //         const parsedNotes = JSON.parse(data);
+    //         parsedNotes.push(newNote);
+    //         console.log(parsedNotes);
 
-            fs.writeFile("./db/db.json", JSON.stringify(parsedNotes, null, 2), (err) => {
-                err ? console.error(err) : console.log("Note saved");
-            })
-        }
-    })
+    //         fs.writeFile("./db/db.json", JSON.stringify(parsedNotes, null, 2), (err) => {
+    //             err ? console.error(err) : console.log("Note saved");
+    //         })
+    //     }
+    // })
+
+
+    addNewNote(newNote, "./db/db.json");
 
 });
 

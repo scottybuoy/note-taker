@@ -2,7 +2,7 @@
 const express = require("express");
 const path = require("path");
 const fs = require("fs");
-const noteStorage = require("./db/db.json");
+const uniqueId = require("./helpers/uniqueId.js");
 
 // create variable for port
 const PORT = 3001;
@@ -15,7 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-// get requests
+
+
+
+// ---------- get requests ------------
 
 app.get("/", (req, res) => res.send("Supppppp"));
 
@@ -33,22 +36,28 @@ app.get("/api/notes", (req, res) => {
     });
 });
 
+
+
+
+
+
 app.post("/api/notes", (req, res) => {
     console.log(`${req.method} request received`)
     const { title, text } = req.body;
 
     const newNote = {
         title,
-        text
+        text,
+        id: uniqueId()
     };
 
-    const newNoteStr = JSON.stringify(newNote);
+    const newNoteStr = JSON.stringify(newNote, null, 2);
 
     fs.writeFile("./db/db.json", newNoteStr, (err) => {
         if (err) {
             console.error(err);
         }
-    })
+    });
 
 });
 
